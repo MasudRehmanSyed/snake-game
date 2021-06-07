@@ -58,17 +58,17 @@ while game_on:
     snake.move()
     # Collision with food
     if snake.head.distance(food) < 15:
-        pen_write('Nom, Nom, Nom', 1)
         score.update_score()
         food.new_food()
         snake.extend()
-    game_on = snake.wall_collision()
-    for segment in snake.segments:
-        if segment == snake.head:
-            pass
-        elif snake.head.distance(segment) < 10:
-            game_on = False
-            # game_on = snake.tail_collosion()
-pen_write("GAME OVER", 0)
+    if not (snake.wall_collision() and snake.tail_collision()):
+        game_on = False
+    # for segment in snake.segments:
+    #     if segment == snake.head:
+    #         pass
+    #     elif snake.head.distance(segment) < 10:
+    #         game_on = False
+
+score.game_over()
 
 screen.exitonclick()
