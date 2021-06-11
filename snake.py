@@ -1,8 +1,6 @@
-import time
 from turtle import Turtle
-import random as rd
 
-MOVE_DISTANCE = 20
+MOVE_DISTANCE = 10
 STARTING_COORDINATES = [(x, 0) for x in range(0, -60, -20)]
 WIDTH = 290
 HEIGHT = 290
@@ -21,8 +19,8 @@ class Snake:
     def __init__(self):
         self.segments = []
         self.create_snake()
+        self.speed = MOVE_DISTANCE
         self.head = self.segments[0]
-
 
     def create_snake(self):
         for i in STARTING_COORDINATES:
@@ -42,19 +40,10 @@ class Snake:
 
     def move(self):
         """ moves forward by going to the position of square ahead"""
-
         for i in range(len(self.segments) - 1, 0, -1):
             new_position = self.segments[i - 1].pos()
             self.segments[i].goto(new_position)
-
-        # if not(-abs(WIDTH) < self.head.xcor() < WIDTH):
-        #     self.head.undo()
-        #     self.head.setheading(rd.choice(DIRECTION) - self.head.heading())
-        # elif not (-abs(WIDTH) < self.head.ycor() < WIDTH):
-        # #     self.head.undo()
-        # #     self.head.setheading(rd.choice(DIRECTION) - self.head.heading())
-
-        self.head.forward(MOVE_DISTANCE)
+        self.head.forward(self.speed)
 
     def left(self):
         """ moves the first square only, the others will follow via move_forward()"""
@@ -70,7 +59,6 @@ class Snake:
             self.head.seth(DOWN)
 
     def right(self):
-
         if self.head.heading() != LEFT:
             self.head.seth(RIGHT)
 
@@ -78,12 +66,16 @@ class Snake:
         x = self.head.xcor()
         y = self.head.ycor()
         if -280 > x or x > 280 or -280 > y or y > 280:
-            print('hit wall')
-            return False
-        return True
+            return True
+        return False
 
     def tail_collision(self):
         for segment in self.segments[1:]:
-            if self.head.distance(segment) < 10:
-                return False
-        return True
+            return self.head.distance(segment) < 10
+
+    def speed_up(self):
+        self.speed += 5
+
+    def reset_snake(self):
+        self.segments.clear()  # delete the turtle list
+        self.create_snake()  # create a new snake
